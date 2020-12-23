@@ -32,10 +32,6 @@ objects:
           envFrom:
             - secretRef:
                 name: ${APP_NAME}
-          volumeMounts:
-            - mountPath: /app/appsettings.Release.json
-              name: appsettings-volume
-              subPath: appsettings.Release.json
           readinessProbe: 
             timeoutSeconds: 3
             initialDelaySeconds: 3
@@ -48,11 +44,6 @@ objects:
             httpGet: 
               path: "/"
               port: 8080
-        volumes:
-        - configMap:
-            defaultMode: 444
-            name: ${APP_NAME}
-          name: appsettings-volume
 - kind: Service
   apiVersion: v1
   metadata: 
