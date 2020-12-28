@@ -1,0 +1,84 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata: 
+  name: webapp
+objects:
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata: 
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    replicas: "${{REPLICA_COUNT}}"
+    selector: 
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}
+    template: 
+      metadata: 
+        labels: 
+          app: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}
+      spec: 
+        containers: 
+        - image: ${REPO_NAME}/${IMAGE_NAME}
+          name: ${APP_NAME}
+          ports: 
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+- kind: Service
+  apiVersion: v1
+  metadata: 
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    ports:
+    - name: web-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: web-8443
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}
+- kind: Route
+  apiVersion: v1
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    path: /
+    port:
+      targetPort: web-8080
+    to:
+      kind: Service
+      name: ${APP_NAME}
+      weight: 100          
+parameters: 
+- name: REPO_NAME
+  description: "desc"
+  required: true
+  value: julijus
+  
+- name: APP_NAME
+  description: "desc"
+  required: true
+  value: webapp
+  
+- name: REPLICA_COUNT
+  description: "desc"
+  required: true
+  value: "1"
+  
+- name: IMAGE_NAME
+  description: "desc"
+  required: true
+  value: webapp-api.docker:20201222.1
