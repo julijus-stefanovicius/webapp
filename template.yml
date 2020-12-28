@@ -24,20 +24,20 @@ objects:
         - image: ${REPO_NAME}/${IMAGE_NAME}
           name: ${APP_NAME}
           ports: 
-          - containerPort: 8080
+          - containerPort: 80
             protocol: TCP
           readinessProbe: 
             timeoutSeconds: 3
             initialDelaySeconds: 3
             httpGet: 
               path: "/"
-              port: 8080
+              port: 80
           livenessProbe: 
             timeoutSeconds: 3
             initialDelaySeconds: 30
             httpGet: 
               path: "/"
-              port: 8080
+              port: 80
 - kind: Service
   apiVersion: v1
   metadata: 
@@ -47,9 +47,9 @@ objects:
   spec:
     ports:
     - name: web
-      port: 8080
+      port: 80
       protocol: TCP
-      targetPort: 8080
+      targetPort: 80
     selector:
       app: ${APP_NAME}
       deploymentconfig: ${APP_NAME}
