@@ -28,6 +28,7 @@ objects:
             protocol: TCP
           - containerPort: 8443
             protocol: TCP
+          working-dir: / 
 - kind: Service
   apiVersion: v1
   metadata: 
