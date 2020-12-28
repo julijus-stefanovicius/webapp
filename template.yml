@@ -26,18 +26,8 @@ objects:
           ports: 
           - containerPort: 8080
             protocol: TCP
-          readinessProbe: 
-            timeoutSeconds: 3
-            initialDelaySeconds: 3
-            httpGet: 
-              path: "/"
-              port: 8080
-          livenessProbe: 
-            timeoutSeconds: 3
-            initialDelaySeconds: 30
-            httpGet: 
-              path: "/"
-              port: 8080
+          - containerPort: 8443
+            protocol: TCP
 - kind: Service
   apiVersion: v1
   metadata: 
