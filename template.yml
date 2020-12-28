@@ -21,7 +21,7 @@ objects:
           deploymentconfig: ${APP_NAME}
       spec: 
         containers: 
-        - image: julijus/${IMAGE_NAME}
+        - image: ${REPO_NAME}/${IMAGE_NAME}
           name: ${APP_NAME}
           ports: 
           - containerPort: 8080
@@ -69,6 +69,11 @@ objects:
       name: ${APP_NAME}
       weight: 100          
 parameters: 
+- name: REPO_NAME
+  description: "desc"
+  required: true
+  value: centos
+  
 - name: APP_NAME
   description: "desc"
   required: true
@@ -82,4 +87,4 @@ parameters:
 - name: IMAGE_NAME
   description: "desc"
   required: true
-  value: webapp-api.docker:20201217.2
+  value: httpd-24-centos7:latest
