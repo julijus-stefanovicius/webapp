@@ -57,7 +57,7 @@ objects:
   spec:
     path: /
     port:
-      targetPort: web
+      targetPort: web-8080
     to:
       kind: Service
       name: ${APP_NAME}
