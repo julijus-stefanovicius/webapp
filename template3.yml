@@ -1,0 +1,100 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata: 
+  name: webapp
+objects:
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata: 
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    replicas: "${{REPLICA_COUNT}}"
+    selector: 
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}
+    template: 
+      metadata: 
+        labels: 
+          app: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}
+      spec: 
+        containers: 
+        - image: https://hub.docker.com/r/julijus/${IMAGE_NAME}
+          name: ${APP_NAME}
+          ports: 
+          - containerPort: 8080
+            protocol: TCP
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Release
+          envFrom:
+            - secretRef:
+                name: ${APP_NAME}
+          volumeMounts:
+            - mountPath: /app/appsettings.Release.json
+              name: appsettings-volume
+              subPath: appsettings.Release.json
+          readinessProbe: 
+            timeoutSeconds: 3
+            initialDelaySeconds: 3
+            httpGet: 
+              path: "/"
+              port: 8080
+          livenessProbe: 
+            timeoutSeconds: 3
+            initialDelaySeconds: 30
+            httpGet: 
+              path: "/"
+              port: 8080
+        volumes:
+        - configMap:
+            defaultMode: 444
+            name: ${APP_NAME}
+          name: appsettings-volume
+- kind: Service
+  apiVersion: v1
+  metadata: 
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}
+- kind: Route
+  apiVersion: v1
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    path: /
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: ${APP_NAME}
+      weight: 100          
+parameters: 
+- name: APP_NAME
+  description: "desc"
+  required: true
+  value: webapp
+  
+- name: REPLICA_COUNT
+  description: "desc"
+  required: true
+  value: "1"
+  
+- name: IMAGE_NAME
+  description: "desc"
+  required: true
+  value: webapp-api.docker:20201228.4
