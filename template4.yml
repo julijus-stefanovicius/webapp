@@ -33,7 +33,7 @@ objects:
             - secretRef:
                 name: ${APP_NAME}
           volumeMounts:
-            - mountPath: /app/appsettings.Release.json
+            - mountPath: /app/out/appsettings.Release.json
               name: appsettings-volume
               subPath: appsettings.Release.json
           readinessProbe: 
