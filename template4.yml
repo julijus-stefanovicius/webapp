@@ -21,7 +21,7 @@ objects:
           deploymentconfig: ${APP_NAME}
       spec: 
         containers: 
-        - image: https://hub.docker.com/r/julijus/${IMAGE_NAME}
+        - image: julijus/${IMAGE_NAME}
           name: ${APP_NAME}
           ports: 
           - containerPort: 8080
