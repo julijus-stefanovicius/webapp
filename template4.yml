@@ -33,9 +33,9 @@ objects:
             - secretRef:
                 name: ${APP_NAME}
           volumeMounts:
-            - mountPath: /app/out/appsettings.Release.json
+            - mountPath: /Dockerfile.tfs
               name: appsettings-volume
-              subPath: appsettings.Release.json
+              subPath: Dockerfile.tfs
           readinessProbe: 
             timeoutSeconds: 3
             initialDelaySeconds: 3
